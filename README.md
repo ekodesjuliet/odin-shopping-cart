@@ -4,7 +4,7 @@
 
 Odinforge is a mock game store built with React and TypeScript. It features game browsing, search and filtering, game details, a shopping cart, and a wishlist, with a responsive interface and API integration.
 
-[Odinforge](https://krig6.github.io/odin-shopping-cart/) - Where great games forge great collections!
+[Odinforge](https://ekodesjuliet.github.io/odin-shopping-cart/) - Where great games forge great collections!
 
 ## Technologies Used
 
