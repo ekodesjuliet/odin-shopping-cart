@@ -48,7 +48,7 @@ Odinforge is a mock game store built with React and TypeScript. It features game
 - **Client-side routing** — Home, shop, cart, wishlist, and game detail routes with a catch-all not found page
 - **Mobile filter drawer** — Filters slide in fullscreen on small screens and lock page scroll, becoming a sidebar at `lg` and above
 - **Stale request protection** — Aborted and superseded API responses are discarded so the UI never shows outdated data
-- **Mock data fallback** — Flip one flag in `config.ts` to run the app without an API key
+- **Automatic API fallback**— Uses RAWG as the primary data source and automatically switches to a local dataset of 50 fallback games when API requests fail, keeping game browsing and detail pages functional during outages
 - **Responsive layout** — Adapts from mobile to desktop across navigation, grids, carousels, and filters
 - **Accessibility** — Labelled icon buttons, `role`/`aria` states for loading and errors, and visible focus rings
 - **Reduced motion support** — Skeleton shimmer animations are disabled when the user prefers reduced motion
@@ -100,9 +100,10 @@ A short list of what I'd like to add next, none of it built yet.
 
 ## Customization
 
-- Point the app at a different API or swap your API key in `.env` and `src/config.ts`
-- Run the whole app without an API key by setting `USE_MOCK_DATA = true` in `src/config.ts`
-- Edit the five fallback games in `src/data/mockGames.ts` and swap their artwork in `src/assets/images/carousel/`
+- Configure the RAWG API key in `.env` using `VITE_RAWG_API_KEY`
+- Run the app without an API key using the automatic local fallback data
+- Edit the 50 fallback games in `src/data/fallbackGames.ts`, including their metadata, descriptions, ratings, and sorting properties
+- Replace fallback artwork in `src/assets/images/`
 - Change the flat game price with `GAME_PRICE` in `src/config.ts`, or give each game its own price in the mapping
 - Add, rename, or remove genres in `src/components/Shop/GenreFilter.tsx`
 - Change how many games each homepage section requests in `src/components/GameShowcase/`
