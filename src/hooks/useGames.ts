@@ -77,11 +77,13 @@ export const useGames = (params: FetchGamesParams): UseGamesResult => {
     const isCurrentRequest =
         request.key === paramsKey && request.retryCount === retryCount
     const isFetching = !isCurrentRequest || request.status === 'pending'
+    const games = isCurrentRequest ? request.games : []
+    const count = isCurrentRequest ? request.count : 0
 
     return {
-        games: request.games,
-        count: request.count,
-        isPending: request.games.length === 0 && isFetching,
+        games,
+        count,
+        isPending: games.length === 0 && isFetching,
         isFetching,
         error: isCurrentRequest ? request.error : null,
         refetch,
