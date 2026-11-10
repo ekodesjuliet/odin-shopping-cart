@@ -42,13 +42,15 @@ export const fetchFallbackGames = async (
         }
     })
 
+    const count = sortedGames.length
+
     const pageSize = params?.page_size ?? 20
     const page = params?.page ?? 1
     const start = (page - 1) * pageSize
 
     const games = sortedGames.slice(start, start + pageSize)
 
-    return { games, count: fallbackGames.length }
+    return { games, count }
 }
 
 export const fetchFallbackGame = async (id: number): Promise<Game> => {
