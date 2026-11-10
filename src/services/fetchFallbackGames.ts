@@ -1,4 +1,5 @@
 import { fallbackGames } from '../data/fallbackGames.ts'
+import { GAME_GENRES } from '../data/genre.ts'
 import type { GamesResult } from './gameService.ts'
 import type { FetchGamesParams } from './rawgApi.ts'
 import type { Game } from '../type/game.ts'
@@ -6,7 +7,29 @@ import type { Game } from '../type/game.ts'
 export const fetchFallbackGames = async (
     params?: FetchGamesParams
 ): Promise<GamesResult> => {
-    const sortedGames = [...fallbackGames].sort((a, b) => {
+    let filteredGames = [...fallbackGames]
+
+    if (params?.search) {
+        const search = params.search.toLowerCase()
+
+        filteredGames = filteredGames.filter((game) =>
+            game.name.toLowerCase().includes(search)
+        )
+    }
+
+    if (params?.genres) {
+        const selectedGenres = params.genres.split(',')
+
+        filteredGames = filteredGames.filter((game) =>
+            selectedGenres.some((slug) => {
+                const genre = GAME_GENRES.find((g) => g.slug === slug)
+
+                return genre && game.genres?.includes(genre.name)
+            })
+        )
+    }
+
+    const sortedGames = filteredGames.sort((a, b) => {
         switch (params?.ordering) {
             case '-rating':
                 return b.rating - a.rating
@@ -25,7 +48,7 @@ export const fetchFallbackGames = async (
 
     const games = sortedGames.slice(start, start + pageSize)
 
-    return { games, count: games.length }
+    return { games, count: fallbackGames.length }
 }
 
 export const fetchFallbackGame = async (id: number): Promise<Game> => {
