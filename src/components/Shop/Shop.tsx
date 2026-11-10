@@ -201,15 +201,18 @@ export const Shop = () => {
                         )}
                     </div>
 
-                    {isFetching && isPending === false && (
+                    {(isLoadingMore || isFetching) && isPending === false && (
                         <div
                             className={`mt-4 ${gameGridClass}`}
                             role="status"
                             aria-label="Loading games"
                         >
-                            {Array.from({ length: 5 }, (_, index) => (
-                                <GameCardSkeleton key={index} />
-                            ))}
+                            {Array.from(
+                                { length: SKELETON_COUNT },
+                                (_, index) => (
+                                    <GameCardSkeleton key={index} />
+                                )
+                            )}
                         </div>
                     )}
 
