@@ -20,7 +20,7 @@ export const Spinner = ({ className = '' }: SkeletonProps) => (
 
 export const GameCardSkeleton = () => (
     <div aria-hidden="true" className="rounded-lg border border-gray-600">
-        <Skeleton className="h-30 w-full rounded-t-lg rounded-br-none rounded-bl-none md:h-40 xl:aspect-2/3 xl:h-full" />
+        <Skeleton className="h-30 w-full rounded-t-lg rounded-br-none rounded-bl-none md:h-40 xl:aspect-2/3 xl:h-auto" />
 
         <div className="p-2.5">
             <Skeleton className="h-4 w-3/4" />
