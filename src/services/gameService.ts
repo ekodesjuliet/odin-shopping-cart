@@ -2,7 +2,7 @@ import { fetchApiGame, fetchApiGames } from './rawgApi'
 import type { Game } from '../type/game'
 import type { FetchGamesParams } from './rawgApi'
 import { USE_MOCK_DATA } from '../config'
-import { fetchMockGame, fetchMockGames } from './mockGameService'
+import { fetchFallbackGame, fetchFallbackGames } from './fetchFallbackGames'
 import placeholder from '../assets/images/placeholder.png'
 
 export type GamesResult = {
@@ -26,19 +26,25 @@ export const fetchGames = async (
     options?: { signal?: AbortSignal }
 ): Promise<GamesResult> => {
     if (USE_MOCK_DATA) {
-        return fetchMockGames()
+        return fetchFallbackGames()
     }
 
-    const data = await fetchApiGames(params, options?.signal)
-
-    return {
-        games: data.results.map((game) => ({
-            id: game.id,
-            name: game.name,
-            background_image: resolveImage(game.background_image),
-            rating: game.rating,
-        })),
-        count: data.count,
+    try {
+        const data = await fetchApiGames(params, options?.signal)
+        return {
+            games: data.results.map((game) => ({
+                id: game.id,
+                name: game.name,
+                background_image: resolveImage(game.background_image),
+                rating: game.rating,
+            })),
+            count: data.count,
+        }
+    } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+            throw error
+        }
+        return fetchFallbackGames(params)
     }
 }
 
@@ -47,29 +53,35 @@ export const fetchGame = async (
     options?: { signal?: AbortSignal }
 ): Promise<Game> => {
     if (USE_MOCK_DATA) {
-        return fetchMockGame(id)
+        return fetchFallbackGame(id)
     }
+    try {
+        const data = await fetchApiGame(id, options?.signal)
 
-    const data = await fetchApiGame(id, options?.signal)
-
-    return {
-        id: data.id,
-        name: data.name,
-        background_image: resolveImage(data.background_image),
-        rating: data.rating,
-        released: data.released || undefined,
-        isTba: data.tba,
-        description: stripHtml(data.description ?? ''),
-        metacritic: data.metacritic ?? undefined,
-        esrb_rating: data.esrb_rating?.name,
-        genres: toNames(data.genres),
-        developers: toNames(data.developers),
-        publishers: toNames(data.publishers),
-        platforms: toNames(
-            data.parent_platforms?.map((entry) => entry.platform)
-        ),
-        stores: toNames(data.stores?.map((entry) => entry.store)),
-        playtime: data.playtime,
-        ratings_count: data.ratings_count,
+        return {
+            id: data.id,
+            name: data.name,
+            background_image: resolveImage(data.background_image),
+            rating: data.rating,
+            released: data.released || undefined,
+            isTba: data.tba,
+            description: stripHtml(data.description ?? ''),
+            metacritic: data.metacritic ?? undefined,
+            esrb_rating: data.esrb_rating?.name,
+            genres: toNames(data.genres),
+            developers: toNames(data.developers),
+            publishers: toNames(data.publishers),
+            platforms: toNames(
+                data.parent_platforms?.map((entry) => entry.platform)
+            ),
+            stores: toNames(data.stores?.map((entry) => entry.store)),
+            playtime: data.playtime,
+            ratings_count: data.ratings_count,
+        }
+    } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+            throw error
+        }
+        return fetchFallbackGame(id)
     }
 }

@@ -9,7 +9,7 @@ export type ApiGame = {
     released: string
 }
 
-type GamesResponse = {
+export type GamesResponse = {
     results: ApiGame[]
     count: number
 }
