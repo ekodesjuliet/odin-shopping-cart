@@ -32,9 +32,9 @@ Odinforge is a mock game store built with React and TypeScript. It features game
 - **Mega Sale CTA** — Responsive promo banner linking to the shop, with a separate mobile crop
 - **Store features** — Trust row covering instant delivery, secure payment, great prices, and 24/7 support
 - **Game search** — Submit a query from the header to jump to filtered shop results, with a clearable results chip
-- **Genre filtering** — Multi-select across 19 genres, sent to the API as a combined filter
+- **Genre filtering** — Multi-select across 19 genres, applied as a combined filter to both RAWG results and fallback data
 - **Rating filtering** — Filter the loaded page by a 5-to-1 star minimum
-- **Load More pagination** — Appends ten games at a time, hidden once the full result set is loaded
+- **Load More pagination** — Appends ten games at a time with skeleton placeholders while the next page loads, hidden once the full result set is loaded
 - **Game detail pages** — Hero art, rating, Metacritic and ESRB information, release year or TBA, price, and description
 - **Detail metadata** — Genres, platforms, stores, developer, publisher, playtime, and ratings count as chips
 - **Shopping cart** — Add or remove games, adjust quantities, and see a live item count badge in the header
@@ -43,12 +43,12 @@ Odinforge is a mock game store built with React and TypeScript. It features game
 - **Wishlist** — Save games with a heart toggle and add them to the cart from the wishlist page
 - **Add-to-cart and wishlist toggles** — Available on game cards and detail pages, reflecting current state in the label
 - **Loading skeletons** — Shimmering placeholders for grids, carousels, cards, and the detail page
-- **Background refetching** — The grid dims and extends with skeletons while new results stream in
+- **Loading states** — Changing filters or search swaps the grid for skeletons, and loading another page appends skeleton cards until it arrives
 - **Error and empty states** — Alert regions with a Try Again retry, plus tailored messages for empty carts, wishlists, and searches
 - **Client-side routing** — Home, shop, cart, wishlist, and game detail routes with a catch-all not found page
 - **Mobile filter drawer** — Filters slide in fullscreen on small screens and lock page scroll, becoming a sidebar at `lg` and above
 - **Stale request protection** — Aborted and superseded API responses are discarded so the UI never shows outdated data
-- **Automatic API fallback**— Uses RAWG as the primary data source and automatically switches to a local dataset of 50 fallback games when API requests fail, keeping game browsing and detail pages functional during outages
+- **Automatic API fallback** — Uses RAWG as the primary data source and automatically switches to a local dataset of 50 fallback games when API requests fail; search, genre filters, sorting, and pagination also work against the fallback data
 - **Responsive layout** — Adapts from mobile to desktop across navigation, grids, carousels, and filters
 - **Accessibility** — Labelled icon buttons, `role`/`aria` states for loading and errors, and visible focus rings
 - **Reduced motion support** — Skeleton shimmer animations are disabled when the user prefers reduced motion
@@ -103,9 +103,9 @@ A short list of what I'd like to add next, none of it built yet.
 - Configure the RAWG API key in `.env` using `VITE_RAWG_API_KEY`
 - Run the app without an API key using the automatic local fallback data
 - Edit the 50 fallback games in `src/data/fallbackGames.ts`, including their metadata, descriptions, ratings, and sorting properties
-- Replace fallback artwork in `src/assets/images/`
+- Replace fallback artwork in `src/assets/images/carousel/` and the shared placeholder at `src/assets/images/placeholder.png`
 - Change the flat game price with `GAME_PRICE` in `src/config.ts`, or give each game its own price in the mapping
-- Add, rename, or remove genres in `src/components/Shop/GenreFilter.tsx`
+- Add, rename, or remove genres in `src/data/genre.ts` (used by both the filter UI and fallback filtering)
 - Change how many games each homepage section requests in `src/components/GameShowcase/`
 - Change how many games a page loads in `src/components/Shop/Shop.tsx`
 - Tune the hero carousel — autoplay interval, axis, and starting slide — in `src/components/Carousel/EmblaCarousel.tsx` and `src/components/Homepage/Homepage.tsx`
@@ -113,7 +113,7 @@ A short list of what I'd like to add next, none of it built yet.
 - Adjust the tax rate in `src/context/CartProvider.tsx` and the shipping line in `src/components/Collection/OrderSummary.tsx`
 - Recolor the theme by editing the background in `src/index.css` and the accent hex values used across `src/`
 - Slow down or disable the skeleton shimmer in the `--animate-shimmer` block in `src/index.css`
-- Replace the logo, fallback artwork, and sale banner in `src/assets/images/`
+- Replace the logo and sale banner in `src/assets/images/`
 - Update the page title and add a favicon in `index.html`
 - Point the footer link at your own GitHub profile in `src/components/Footer.tsx`
 
